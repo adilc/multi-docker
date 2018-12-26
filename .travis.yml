@@ -2,21 +2,22 @@ sudo: required
 services:
   - docker
 
-before_install: 
-  - docker build -t adilcan/docker-react -f Dockerfile.dev .
+
+before_install:
+  - docker build -t adilcan/react-test -f ./client/Dockerfile.dev ./client
 
 script: 
-  - docker run adilcan/docker-react npm run test -- --coverage
+  - docker run adilcan/react-test npm run test -- --coverage 
 
-deploy:
-  provider: elasticbeanstalk
-  region: "us-east-1"
-  app: "docker-react"
-  env: "DockerReact-env"
-  bucket_name: "elasticbeanstalk-us-east-1-435264530466"
-  bucker_path: "docker-react"
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: 
-    secure: "$AWS_SECRET_KEY"
+after_success:
+  - docker build -t adilcan/multi-client ./client
+  - docker build -t adilcan/multi-nginx ./nginx
+  - docker build -t adilcan/multi-server ./server
+  - docker build -t adilcan/multi-worker ./worker
+
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+- docker push adilcan/multi-client
+- docker push adilcan/multi-nginx
+- docker push adilcan/multi-server
+- docker push adilcan/multi-worker
