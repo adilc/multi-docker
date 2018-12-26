@@ -7,3 +7,9 @@ before_install:
 
 script:
   - docker run adilcan/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t adilcan/multi-client ./client
+  - docker build -t adilcan/multi-nginx ./nginx
+  - docker build -t adilcan/multi-server ./server
+  - docker build -t adilcan/multi-worker ./worker
