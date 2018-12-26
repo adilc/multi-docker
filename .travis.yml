@@ -16,7 +16,7 @@ after_success:
 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
-- docker push adilcan/multi-client
-- docker push adilcan/multi-nginx
-- docker push adilcan/multi-server
-- docker push adilcan/multi-worker
+  - docker push adilcan/multi-client
+  - docker push adilcan/multi-nginx
+  - docker push adilcan/multi-server
+  - docker push adilcan/multi-worker
